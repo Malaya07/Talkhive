@@ -497,7 +497,7 @@ button:hover {
   gap: 15px;
   width: 70%;
   animation: fadeMessage 0.5s ease-in;
-  background-image: url('/chat_back.jpg');
+  background-image: url('/public/chat_back.jpg');
   background-size: cover;
   background-position: center center;
   background-attachment: fixed;
