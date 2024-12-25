@@ -172,7 +172,7 @@ button:active::before {
 }
 
 .card input {
-  width: 100%;
+  width: 90%;
   padding: 10px;
   margin-bottom: 15px;
   border: none;
@@ -195,7 +195,30 @@ button:active::before {
 .card input.shake {
   animation: shake 0.3s ease-in-out;
 }
+.card select {
+  width: 98%;
+  padding: 10px;
+  margin-bottom: 15px;
+  border: none;
+  border-radius: 10px;
+  background: #d4e3f5;
+  /* Bluish background for inputs */
+  box-shadow: 7px 7px 15px #a0b9d3, -7px -7px 15px #ffffff;
+  /* Soft bluish shadow */
+  font-size: 16px;
+  color: #4a4a4a;
+  transition: 0.3s ease-in-out;
+}
 
+.card select:focus {
+  outline: none;
+  box-shadow: 0 0 5px #a3b1c6, inset 0 0 5px #ffffff;
+  /* Focus shadow effect */
+}
+
+.card select.shake {
+  animation: shake 0.3s ease-in-out;
+}
 .card button {
   background: #d4e3f5;
   /* Bluish background for the button */
