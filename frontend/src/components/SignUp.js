@@ -19,6 +19,12 @@ const SignUp = () => {
   const [bcount, setBcount] = useState(0);
 const [gcount, setGcount] = useState(0);
 
+  const getRandomItem = (array) => {
+  const randomIndex = Math.floor(Math.random() * array.length);
+  return array[randomIndex];
+};
+
+
   const [signupUser, { loading }] = useMutation(SIGNUP_USER, {
     onCompleted: () => navigate("/signin"),
     onError: (error) => setError(error.message),
@@ -55,14 +61,10 @@ const [gcount, setGcount] = useState(0);
   let updatedGcount = parseInt(localStorage.getItem("gcount")) || 0;
 
   if (gender === "Male") {
-    let Id = boys[updatedBcount % boys.length];
-    updatedBcount = (updatedBcount + 1) % boys.length;
-    localStorage.setItem("bcount", updatedBcount);
+    let Id = getRandomItem(boys);
     profilepic = `https://avatar.iran.liara.run/public/${Id}`;
   } else if (gender === "Female") {
-    let Id = girls[updatedGcount % girls.length];
-    updatedGcount = (updatedGcount + 1) % girls.length;
-    localStorage.setItem("gcount", updatedGcount);
+    let Id = getRandomItem(girls);
     profilepic = `https://avatar.iran.liara.run/public/${Id}`;
   } else {
     profilepic = `https://avatar.iran.liara.run/public`;
