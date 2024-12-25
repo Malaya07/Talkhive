@@ -25,59 +25,62 @@ const [gcount, setGcount] = useState(0);
   });
 
   const handleSignUp = () => {
-    const trimmedEmail = email.trim();
-    const trimmedPassword = password.trim();
-    const trimmedName = name.trim();
-    const trimmedGender = gender.trim();
+  const trimmedEmail = email.trim();
+  const trimmedPassword = password.trim();
+  const trimmedName = name.trim();
+  const trimmedGender = gender.trim();
 
-    // Basic validation
-    if (!trimmedEmail || !trimmedPassword || !trimmedName || !trimmedGender) {
-      setError("All fields are required.");
-      triggerShake(["email", "password", "name", "gender"]);
-      return;
-    }
+  if (!trimmedEmail || !trimmedPassword || !trimmedName || !trimmedGender) {
+    setError("All fields are required.");
+    triggerShake(["email", "password", "name", "gender"]);
+    return;
+  }
 
-    // Validate email format
-    const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
-    if (!emailRegex.test(trimmedEmail)) {
-      setError("Please enter a valid email address.");
-      triggerShake(["email"]);
-      return;
-    }
+  const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
+  if (!emailRegex.test(trimmedEmail)) {
+    setError("Please enter a valid email address.");
+    triggerShake(["email"]);
+    return;
+  }
 
-    // Validate password strength
-    if (trimmedPassword.length < 6) {
-      setError("Password must be at least 6 characters long.");
-      triggerShake(["password"]);
-      return;
-    }
+  if (trimmedPassword.length < 6) {
+    setError("Password must be at least 6 characters long.");
+    triggerShake(["password"]);
+    return;
+  }
 
-    // Clear error
-    setError("");
-    if (gender === "Male") {
-        let Id = boys[bcount];
-        setBcount((prev) => (prev + 1) % boys.length);
-        profilepic = `https://avatar.iran.liara.run/public/${Id}`;
-      } else if (gender === "Female") {
-        let Id = girls[gcount];
-        setGcount((prev) => (prev + 1) % girls.length);
-        profilepic = `https://avatar.iran.liara.run/public/${Id}`;
-      } else {
-        profilepic = `https://avatar.iran.liara.run/public`;
-      }
+  setError("");
 
-    signupUser({
-      variables: {
-        userNew: {
-          username: trimmedName,
-          email: trimmedEmail,
-          password: trimmedPassword,
-          gender: trimmedGender,
-          profilePicture: profilepic,
-        },
+  let updatedBcount = parseInt(localStorage.getItem("bcount")) || 0;
+  let updatedGcount = parseInt(localStorage.getItem("gcount")) || 0;
+
+  if (gender === "Male") {
+    let Id = boys[updatedBcount % boys.length];
+    updatedBcount = (updatedBcount + 1) % boys.length;
+    localStorage.setItem("bcount", updatedBcount);
+    profilepic = `https://avatar.iran.liara.run/public/${Id}`;
+  } else if (gender === "Female") {
+    let Id = girls[updatedGcount % girls.length];
+    updatedGcount = (updatedGcount + 1) % girls.length;
+    localStorage.setItem("gcount", updatedGcount);
+    profilepic = `https://avatar.iran.liara.run/public/${Id}`;
+  } else {
+    profilepic = `https://avatar.iran.liara.run/public`;
+  }
+
+  signupUser({
+    variables: {
+      userNew: {
+        username: trimmedName,
+        email: trimmedEmail,
+        password: trimmedPassword,
+        gender: trimmedGender,
+        profilePicture: profilepic,
       },
-    });
-  };
+    },
+  });
+};
+
 
   const triggerShake = (fieldsToClear = []) => {
     setShake(true);
