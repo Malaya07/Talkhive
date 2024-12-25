@@ -191,7 +191,7 @@ const resolvers = {
       if (!chatRoom) throw new Error("Chatroom does not exist");
     
       const adminUser=await User.findById(user.userId)
-      console.log(adminUser," ",chatRoom.admin)
+     // console.log(adminUser," ",chatRoom.admin)
       if(adminUser.username !== chatRoom.admin) throw new Error("You are not the admin")
       // Update the chat room name and return the updated document
       const updatedChatRoom = await ChatRoom.findOneAndUpdate(
@@ -203,8 +203,19 @@ const resolvers = {
       if (!updatedChatRoom) {
         throw new Error("Failed to update chatroom name");
       }
+      const updateMessagesResult = await Message.updateMany(
+        { 
+          ChatRoomname: chatroomname },  // Messages associated with the old room name
+        { $set: { 
+          ChatRoomname: updatedname } }  // Update to the new room name
+      );
+      console.log(updateMessagesResult)
+      if (updateMessagesResult.nModified === 0) {
+        console.warn("No messages were updated; ensure that messages exist for this room.");
+      }
     
       return updatedChatRoom;
+    
     },
     leaveRoom: async (_, { chatroomname }, { user }) => {
       // Check if the chatroom name is provided
@@ -269,19 +280,19 @@ const resolvers = {
         return pubsub.asyncIterator(`NEW_MESSAGE_${Chatroomname}`);
       },
       resolve: (payload) => {
-        console.log("Payload in newMessage subscription:", payload);
+       // console.log("Payload in newMessage subscription:", payload);
         return payload.newMessage;
       },
     },
     chatRoomCreated: {
       subscribe: () => {
-        console.log("Subscription to CHAT_ROOM_CREATED established");
+        //console.log("Subscription to CHAT_ROOM_CREATED established");
         const hell=pubsub.asyncIterator("CHAT_ROOM_CREATED");
        // console.log("hell:",hell)
         return hell;
       },
       resolve: (payload) => {
-        console.log("Payload in chatRoomCreated subscription:", payload);
+        //console.log("Payload in chatRoomCreated subscription:", payload);
         if (!payload || !payload.chatRoomCreated) {
           console.error("Invalid payload in chatRoomCreated:", payload);
           return null;
@@ -291,11 +302,11 @@ const resolvers = {
     },
     roomUpdated: {
       subscribe: () => {
-        console.log("Subscription to ROOM_UPDATED established");
+        //console.log("Subscription to ROOM_UPDATED established");
         return pubsub.asyncIterator(["ROOM_UPDATED"]);
       },
       resolve: (payload) => {
-        console.log("Payload in roomUpdated subscription:", payload);
+        //console.log("Payload in roomUpdated subscription:", payload);
         if (!payload || !payload.roomUpdated) {
           console.error("Invalid payload in roomUpdated:", payload);
           return null;
